@@ -1,8 +1,6 @@
 /*
  * matrixio_recorder.c
  *
- *  Created on: 30.03.2017
- *      Author: michaelboeckling
  */
 
 #include <stdlib.h>
@@ -20,26 +18,15 @@ extern matrix_hal::WishboneBus *wb;
 
 hal::MicrophoneArray mics;
 
-static component_status_t recorder_status = UNINITIALIZED;
+void matrixio_mics_setup()
+{
+  mics.Setup(wb);
+}
 
+
+extern "C" {
 void matrixio_recorder_init()
 {
-   mics.Setup(wb);
+   matrixio_mics_setup();
 }
-
-void matrixio_recorder_start()
-{
-    if(recorder_status == RUNNING)
-        return;
-
-	recorder_status = RUNNING;
 }
-
-void matrixio_recorder_stop()
-{
-    if(recorder_status == STOPPED)
-        return;
-
-    recorder_status = STOPPED;
-}
-

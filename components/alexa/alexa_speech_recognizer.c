@@ -20,7 +20,7 @@
 #include "multipart_parser.h"
 #include "audio_player.h"
 #include "alexa.h"
-#include "audio_recorder.h"
+#include "matrixio_recorder.h"
 #include "common_buffer.h"
 #include "multipart_producer.h"
 #include "ui.h"
@@ -129,7 +129,6 @@ ssize_t send_speech_read_callback(nghttp2_session *session, int32_t stream_id,
             break;
 
         case DONE:
-            audio_recorder_stop();
             renderer_stop();
             ESP_LOGE(TAG, "DONE");
             multipart_end(buffer);
@@ -159,7 +158,6 @@ void speech_recognizer_start_capture(alexa_session_t *alexa_session)
 {
     state = SPEECH_RECOGNIZING;
     renderer_start();
-    audio_recorder_start();
 
     alexa_stream_t *stream_events = get_stream_events(alexa_session);
     stream_events->next_action = META_HEADERS;

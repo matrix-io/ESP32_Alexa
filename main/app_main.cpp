@@ -18,6 +18,7 @@ extern "C" {
 #include "spiram_fifo.h"
 #include "audio_renderer.h"
 #include "audio_recorder.h"
+#include "matrixio_recorder.h"
 #include "web_radio.h"
 #include "playerconfig.h"
 #include "wifi.h"
@@ -191,7 +192,7 @@ void main_loop()
     ESP_LOGW(TAG, "%d: - RAM left %d", __LINE__, esp_get_free_heap_size());
     */
     renderer_init(create_renderer_config());
-    audio_recorder_init();
+    matrixio_recorder_init();
     xTaskCreatePinnedToCore(&alexa_task, "alexa_task", 16384, NULL, 1, NULL, 1);
 #endif
 
