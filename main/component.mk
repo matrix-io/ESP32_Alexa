@@ -8,3 +8,6 @@
 #
 
 # CFLAGS += -v 
+
+COMPONENT_SRCDIRS := ../matrixio_hal_esp32/ .
+

@@ -5,9 +5,14 @@
 
 PROJECT_NAME := alexa
 
-COMPONENT_ADD_INCLUDEDIRS := components/include
+COMPONENT_ADD_INCLUDEDIRS := components/include 
+
+EXTRA_COMPONENT_DIRS += $(PROJECT_PATH)/matrixio_hal_esp32/components
 
 include $(IDF_PATH)/make/project.mk
+
+include ./matrixio_hal_esp32/make/deploy.mk
+
 
 # Copy some defaults into the sdkconfig by default
 # so BT stack is enabled

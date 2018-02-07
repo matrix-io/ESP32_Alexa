@@ -1,4 +1,4 @@
-
+extern "C" {
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
@@ -12,12 +12,8 @@
 #include "esp_log.h"
 #include "nvs_flash.h"
 
-
 #include "http.h"
-
-
 #include "driver/i2s.h"
-
 #include "ui.h"
 #include "spiram_fifo.h"
 #include "audio_renderer.h"
@@ -26,14 +22,19 @@
 #include "playerconfig.h"
 #include "wifi.h"
 #include "app_main.h"
+
 #include "alexa_public.h"
+}
+
 #ifdef CONFIG_BT_SPEAKER_MODE
 #include "bt_speaker.h"
 #endif
 
+#include "wishbone_bus.h"
+namespace hal = matrix_hal;
+matrix_hal::WishboneBus *wb;
 
 #define WIFI_LIST_NUM   10
-
 
 #define TAG "main"
 
@@ -44,6 +45,10 @@
 #define PRIO_CONNECT configMAX_PRIORITIES -1
 
 
+extern int spiRamFifoInit();
+
+
+extern "C" {
 
 static void alexa_task(void *pvParameters)
 {
@@ -58,6 +63,8 @@ static void alexa_task(void *pvParameters)
 
 static void init_hardware()
 {
+//     wb = new matrix_hal::WishboneBus();
+
     nvs_flash_init();
 
     // init UI
@@ -90,13 +97,13 @@ static void start_wifi()
 
 static renderer_config_t *create_renderer_config()
 {
-    renderer_config_t *renderer_config = calloc(1, sizeof(renderer_config_t));
+    renderer_config_t *renderer_config = (renderer_config_t*)calloc(1, sizeof(renderer_config_t));
 
     renderer_config->bit_depth = I2S_BITS_PER_SAMPLE_16BIT;
     renderer_config->i2s_num = I2S_NUM_0;
     renderer_config->sample_rate = 44100;
     renderer_config->sample_rate_modifier = 1.25;
-    renderer_config->output_mode = AUDIO_OUTPUT_MODE;
+    renderer_config->output_mode = (output_mode_t)AUDIO_OUTPUT_MODE;
 
     if(renderer_config->output_mode == I2S_MERUS) {
         renderer_config->bit_depth = I2S_BITS_PER_SAMPLE_32BIT;
@@ -112,16 +119,16 @@ static renderer_config_t *create_renderer_config()
 static void start_web_radio()
 {
     // init web radio
-    web_radio_t *radio_config = calloc(1, sizeof(web_radio_t));
+    web_radio_t *radio_config = (web_radio_t*)calloc(1, sizeof(web_radio_t));
     radio_config->url = PLAY_URL;
 
     // init player config
-    radio_config->player_config = calloc(1, sizeof(player_t));
+    radio_config->player_config = (player_t*)calloc(1, sizeof(player_t));
     radio_config->player_config->command = CMD_NONE;
     radio_config->player_config->decoder_status = UNINITIALIZED;
     radio_config->player_config->decoder_command = CMD_NONE;
     radio_config->player_config->buffer_pref = BUF_PREF_SAFE;
-    radio_config->player_config->media_stream = calloc(1, sizeof(media_stream_t));
+    radio_config->player_config->media_stream = (media_stream_t*)calloc(1, sizeof(media_stream_t));
 
     // init renderer
     renderer_init(create_renderer_config());
@@ -158,7 +165,7 @@ static void signal_strength()
 /**
  * entry point
  */
-void app_main()
+void main_loop()
 {
     ESP_LOGI(TAG, "starting app_main()");
     ESP_LOGW(TAG, "%d: - RAM left %d", __LINE__, esp_get_free_heap_size());
@@ -190,4 +197,7 @@ void app_main()
     ESP_LOGW(TAG, "%d: - RAM left %d", __LINE__, esp_get_free_heap_size());
     // ESP_LOGI(TAG, "app_main stack: %d\n", uxTaskGetStackHighWaterMark(NULL));
     vTaskDelete(NULL);
+}
+
+void app_main(void) { main_loop(); }
 }
