@@ -47,7 +47,8 @@ matrix_hal::WishboneBus *wb;
 
 void matrixio_init()
 {
-     wb = new matrix_hal::WishboneBus();
+  wb = new matrix_hal::WishboneBus();
+  wb->Init();  
 }
 
 extern "C" {

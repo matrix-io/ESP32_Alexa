@@ -11,11 +11,20 @@
 #include "freertos/FreeRTOS.h"
 #include "common_component.h"
 
-// static renderer_config_t *recorder_instance = NULL;
+#include "wishbone_bus.h"
+#include "microphone_array.h"
+
+namespace hal = matrix_hal;
+
+extern matrix_hal::WishboneBus *wb;
+
+hal::MicrophoneArray mics;
+
 static component_status_t recorder_status = UNINITIALIZED;
 
 void matrixio_recorder_init()
 {
+   mics.Setup(wb);
 }
 
 void matrixio_recorder_start()
