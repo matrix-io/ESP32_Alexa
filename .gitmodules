@@ -1,3 +1,6 @@
 [submodule "components/bear_ssl"]
 	path = components/bear_ssl
 	url = https://www.bearssl.org/git/BearSSL
+[submodule "matrixio_hal_esp32"]
+	path = matrixio_hal_esp32
+	url = https://github.com/matrix-io/matrixio_hal_esp32.git
