@@ -45,8 +45,10 @@ matrix_hal::WishboneBus *wb;
 #define PRIO_CONNECT configMAX_PRIORITIES -1
 
 
-extern int spiRamFifoInit();
-
+void matrixio_init()
+{
+     wb = new matrix_hal::WishboneBus();
+}
 
 extern "C" {
 
@@ -63,8 +65,6 @@ static void alexa_task(void *pvParameters)
 
 static void init_hardware()
 {
-//     wb = new matrix_hal::WishboneBus();
-
     nvs_flash_init();
 
     // init UI
@@ -199,5 +199,9 @@ void main_loop()
     vTaskDelete(NULL);
 }
 
-void app_main(void) { main_loop(); }
+void app_main(void) 
+{ 
+  matrixio_init();
+  main_loop(); 
+}
 }
