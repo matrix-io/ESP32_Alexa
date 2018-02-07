@@ -18,6 +18,7 @@ extern "C" {
 #include "spiram_fifo.h"
 #include "audio_renderer.h"
 #include "audio_recorder.h"
+#include "matrixio_renderer.h"
 #include "matrixio_recorder.h"
 #include "web_radio.h"
 #include "playerconfig.h"
@@ -180,8 +181,9 @@ void main_loop()
     ESP_LOGE(TAG, "MAC address: " MACSTR, MAC2STR(sta_mac));
 
     init_hardware();
-
-#ifdef CONFIG_BT_SPEAKER_MODE
+#if 1
+   matrixio_renderer_init(create_renderer_config());
+#elif defined (CONFIG_BT_SPEAKER_MODE)
     bt_speaker_start(create_renderer_config());
 #else
 
